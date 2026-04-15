@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 
 export async function POST(request: NextRequest) {
   let body: {
-    smtp: { host: string; port: string; email: string; password: string };
+    smtp: { host: string; port: string; email: string; password: string; displayName?: string };
     to: string;
     subject: string;
     body: string;
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await transporter.sendMail({
-      from: `"I aint doin allat!" <${smtp.email}>`,
+      from: `"${smtp.displayName?.trim() || "AutoTA"}" <${smtp.email}>`,
       to,
       subject,
       text: emailBody,

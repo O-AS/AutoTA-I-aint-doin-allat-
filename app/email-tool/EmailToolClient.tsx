@@ -8,6 +8,7 @@ import {
   ChangeEvent,
   DragEvent,
 } from "react";
+import { track } from "@vercel/analytics";
 import Link from "next/link";
 import {
   Settings2,
@@ -39,6 +40,7 @@ interface SmtpConfig {
   port: string;
   senderEmail: string;
   password: string;
+  displayName: string;
 }
 
 type Row = Record<string, string>;
@@ -106,7 +108,7 @@ async function decryptJson<T>(cipher: string): Promise<T | null> {
 const SMTP_STORAGE_KEY = "autota_smtp_v2";
 
 function defaultSmtp(): SmtpConfig {
-  return { host: "smtp.gmail.com", port: "587", senderEmail: "", password: "" };
+  return { host: "smtp.gmail.com", port: "587", senderEmail: "", password: "", displayName: "" };
 }
 
 async function loadSmtp(): Promise<SmtpConfig> {
@@ -450,7 +452,7 @@ export default function EmailToolPage() {
     requestAnimationFrame(() => { const pos = start + colName.length + 4; ta.setSelectionRange(pos, pos); ta.focus(); });
   };
 
-  const toApiSmtp = (cfg: SmtpConfig) => ({ host: cfg.host, port: cfg.port, email: cfg.senderEmail, password: cfg.password });
+  const toApiSmtp = (cfg: SmtpConfig) => ({ host: cfg.host, port: cfg.port, email: cfg.senderEmail, password: cfg.password, displayName: cfg.displayName });
 
   const testSmtp = async () => {
     setTestStatus("testing"); setTestError("");
@@ -501,6 +503,7 @@ export default function EmailToolPage() {
           setSentSet((prev) => new Set([...prev, rec.email.toLowerCase()]));
           setRecipients((prev) => prev.map((r) => r.email === rec.email ? { ...r, status: "sent" } : r));
           log(`✓ Sent to ${rec.email}`);
+          track("email_sent", { student_count: queue.length });
         } else {
           setRecipients((prev) => prev.map((r) => r.email === rec.email ? { ...r, status: "error", error: data.error } : r));
           log(`✗ Failed: ${rec.email} — ${data.error}`);
@@ -580,6 +583,13 @@ export default function EmailToolPage() {
                 <label className="block text-xs font-medium text-slate-600 mb-1.5">Sender Email</label>
                 <input type="email" value={smtp.senderEmail} onChange={(e) => setSmtp((s) => ({ ...s, senderEmail: e.target.value }))}
                   placeholder="yourname@gmail.com" autoComplete="off"
+                  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent" />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-xs font-medium text-slate-600 mb-1.5">Display Name <span className="text-slate-400 font-normal">(optional — shown as sender name)</span></label>
+                <input type="text" value={smtp.displayName} onChange={(e) => setSmtp((s) => ({ ...s, displayName: e.target.value }))}
+                  placeholder="e.g. Prof. Smith or CS101 Team"
+                  autoComplete="off"
                   className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent" />
               </div>
               <div className="col-span-2">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, DragEvent, ChangeEvent } from "react";
+import { track } from "@vercel/analytics";
 import {
   Upload,
   Plus,
@@ -232,6 +233,7 @@ export default function ExamSeatingClient() {
     }
 
     setAllocated(result);
+    track("seat_plan_generated", { student_count: rows.length, auditorium_count: auditoriums.length });
     setStep(3);
   };
 

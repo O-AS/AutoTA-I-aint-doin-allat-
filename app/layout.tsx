@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "I aint doin allat! – TA Automation",
@@ -21,6 +22,7 @@ export default function RootLayout({
         <footer className="border-t border-slate-200 py-4 text-center text-xs text-slate-400">
           Made by Omer Haydar
         </footer>
+        <Analytics />
       </body>
     </html>
   );
