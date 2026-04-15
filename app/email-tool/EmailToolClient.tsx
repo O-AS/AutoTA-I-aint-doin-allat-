@@ -586,13 +586,6 @@ export default function EmailToolPage() {
                   className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent" />
               </div>
               <div className="col-span-2">
-                <label className="block text-xs font-medium text-slate-600 mb-1.5">Display Name <span className="text-slate-400 font-normal">(optional — shown as sender name)</span></label>
-                <input type="text" value={smtp.displayName} onChange={(e) => setSmtp((s) => ({ ...s, displayName: e.target.value }))}
-                  placeholder="e.g. Prof. Smith or CS101 Team"
-                  autoComplete="off"
-                  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent" />
-              </div>
-              <div className="col-span-2">
                 <label className="block text-xs font-medium text-slate-600 mb-1.5">Password / App Password</label>
                 <div className="relative">
                   <input type={showPassword ? "text" : "password"} value={smtp.password}
@@ -778,6 +771,13 @@ export default function EmailToolPage() {
                   {columns.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
                 {columns.length === 0 && <p className="text-xs text-amber-600 mt-1.5 flex items-center gap-1"><AlertCircle size={11} /> Upload data first (go to the Data tab).</p>}
+              </div>
+              <div className="mb-4">
+                <label className="block text-xs font-medium text-slate-600 mb-1.5">Sender Display Name <span className="text-slate-400 font-normal">(optional — shown as sender name)</span></label>
+                <input type="text" value={smtp.displayName} onChange={(e) => setSmtp((s) => ({ ...s, displayName: e.target.value }))}
+                  placeholder="e.g. Prof. Smith or CS101 Team"
+                  autoComplete="off"
+                  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400" />
               </div>
               <div className="mb-4">
                 <label className="block text-xs font-medium text-slate-600 mb-1.5">Subject</label>
